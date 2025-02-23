@@ -1,27 +1,27 @@
 # Backend Steps
 # SERVER JS CODE
 
-- Import: express, http, socket.io, chess.js
+- Import: express, http, socket.io, chess.js    #done
 
-- Create Express app instance
-- Initialize HTTP server with Express
-- Instantiate Socket.io on HTTP server
+- Create Express app instance       #done
+- Initialize HTTP server with Express       #done
+- Instantiate Socket.io on HTTP server      #done
 
-- Create Chess object instance (chess.js)
+- Create Chess object instance (chess.js)   #done
 
-- Initialize:
+- Initialize:      #done
     - Players object: track socket IDs, roles (white/black)
     - CurrentPlayer: track current turn
 
-- Configure Express app:
+- Configure Express app:    #done
     - Use EJS templating engine
     - Serve static files from 'public' directory
 
-- Define route for root URL
-- Render EJS template "index"
-- Title: "Custom Chess Game"
+- Define route for root URL     #done
+- Render EJS template "index"       #done
+- Title: "Custom Chess Game"    #done
 
-- Socket.io handles connection event
+- Socket.io handles connection event    #done
 - Callback executed on client connect
 - Server assigns role based on availability:
     - If slots empty:
