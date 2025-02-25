@@ -11,7 +11,7 @@ const io = socket(server);                                      //Give Socket.io
 
 const chess = new Chess();                                      //All the rules are fetch here
 let players = {};
-let currentPlayer = "W";
+let currentPlayer = "w";
 
 app.set("view engine", "ejs");                                  //From this we can use ejs file ---> html files
 app.use(express.static(path.join(__dirname,"public")));         //Access static files like fonts,images,video,audio..etc
@@ -22,7 +22,28 @@ app.get("/", (req, res)=>{
 
 // Socket.io handles connection event
 io.on("connection", function(uniquesocket){
-    console.log("Player one Connected.")
+    console.log("Player one Connected.");
+
+    if(!players.white){
+        players.white = uniquesocket.id;
+        uniquesocket.emit("playRole", "w");
+    }
+    else if(!players.black){
+        players.black = uniquesocket.id;
+        uniquesocket.emit("playRole", "b");
+    } 
+    else{
+        uniquesocket.emit("spectatorRole")
+    }
+
+    socket.on("disconnect", function(){
+        if(uniquesocket.id === players.white){
+            delete players.white;
+        }
+        else if(uniquesocket.id === players.black){
+            delete players.black;
+        }
+    })
 })
 
 server.listen(3000, function () {
