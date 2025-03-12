@@ -26,11 +26,11 @@ io.on("connection", function(uniquesocket){
 
     if(!players.white){
         players.white = uniquesocket.id;
-        uniquesocket.emit("playRole", "w");
+        uniquesocket.emit("playerRole", "w");
     }
     else if(!players.black){
         players.black = uniquesocket.id;
-        uniquesocket.emit("playRole", "b");
+        uniquesocket.emit("playerRole", "b");
     } 
     else{
         uniquesocket.emit("spectatorRole")
@@ -48,9 +48,9 @@ io.on("connection", function(uniquesocket){
     uniquesocket.on("move", (move)=>{
         try{
             // Check correct move by right player
-            if(chess.turn() === 'w' && socket.id !== players.white)
+            if(chess.turn() === 'w' && uniquesocket.id !== players.white)
                 return;
-            if(chess.turn() === 'b' && socket.id !== players.black)
+            if(chess.turn() === 'b' && uniquesocket.id !== players.black)
                 return;
 
             // Update game 
@@ -59,14 +59,14 @@ io.on("connection", function(uniquesocket){
             if(result){
                 currentPlayer = chess.turn();
                 io.emit("move", move);              // io.emit ---> to everyone
-                io.emit("boardState", chess.fen);
+                io.emit("boardState", chess.fen());
             }else{
                console.log("Invalid move: ", move);
                uniquesocket.emit("invalidMove", move);      // uniquesocket.emit ---> particular player
             }
         }catch(err){
             console.log(err);
-            uniquesocket.emit("Invalid move: ", move);
+            uniquesocket.emit("invalidMove: ", move);
         }
     })
 
