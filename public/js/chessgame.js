@@ -9,6 +9,8 @@ let draggedPiece = null;
 let sourceSquare = null;
 let playerRole = null;
 
+let timers = { white: 10 * 60, black: 10 * 60 }; // In seconds
+
 // Function cient side 
 const renderBoard = () => {
     const board = chess.board();
@@ -51,7 +53,7 @@ const renderBoard = () => {
             } else {
                 boardElement.classList.remove("flipped");
             }
-            
+
 
             squareElement.addEventListener("dragover", function (e) {
                 e.preventDefault();
@@ -118,5 +120,37 @@ socket.on("move", function (move) {
     chess.move(move);
     renderBoard();
 })
+
+socket.on("timerUpdate", function (playerTimers) {
+    timers = playerTimers;
+    updateTimersDisplay();
+});
+
+socket.on("gameOver", function ({ winner, reason }) {
+    let message = reason === "timeout" ? "Timeout!" : reason === "checkmate" ? "Checkmate!" : reason === "player left" ? "Player Left!" : "Game Over!";
+    if (winner === "w") {
+        message = "White Wins! " + message;
+    } else if (winner === "b") {
+        message = "Black Wins! " + message;
+    } else {
+        message = "The Game is a Draw!";
+    }
+
+    setTimeout(() => {
+        alert(message);
+    }, 1000);
+});
+
+const updateTimersDisplay = () => {
+    document.getElementById("whiteTimer").innerText = formatTime(timers.white);
+    document.getElementById("blackTimer").innerText = formatTime(timers.black);
+};
+
+const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+};
+
 
 renderBoard();
